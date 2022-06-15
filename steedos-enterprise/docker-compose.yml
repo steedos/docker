@@ -3,6 +3,7 @@ version: "3.9"
 services:
   steedos:
     image: steedos/steedos-project-template:2.2
+    command: "yarn start:enterprise"
     ports:
       - "3000:3000"
     volumes:
@@ -24,7 +25,7 @@ services:
     
   redis:
     image: redis:6.2
-    command: ["/bin/sh","-c", "redis-server --save \"\" --appendonly no"]
+    command: "redis-server --loglevel warning"
     ports:
       - "6379:6379"
  
@@ -34,7 +35,6 @@ services:
       - MAX_PAYLOAD=4096000
     ports:
       - "4222:4222"
-      - "8222:8222"
 
   mongo:
     image: mongo:4.4
