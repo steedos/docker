@@ -19,6 +19,7 @@ services:
       - STEEDOS_STORAGE_DIR=/app/storage
       - TRANSPORTER=nats://nats:4222
       - CACHER=redis://redis:6379
+      - INSTANCES=1 # Nodejs Cluster 集群进程数
     depends_on:
       - redis
       - mongo
