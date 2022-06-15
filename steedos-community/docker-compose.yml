@@ -7,7 +7,6 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - "steedos-data:/app/storage"
       - "steedos-packages:/app/.steedos"
     environment:
       - ROOT_URL=http://127.0.0.1:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
@@ -15,11 +14,15 @@ services:
       - MONGO_URL=mongodb://mongo:27017/steedos
       - MONGO_OPLOG_URL=mongodb://mongo:27017/local
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
-      - STEEDOS_CFS_STORE=local
-      - STEEDOS_STORAGE_DIR=/app/storage
+      - STEEDOS_CFS_STORE=S3
+      - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
+      - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
+      - STEEDOS_CFS_AWS_S3_BUCKET=steedos-prod
+      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=minio-root-user  # 此处必须修改为 minio 中的 MINIO_ROOT_USER
+      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=minio-root-password # 此处必须修改为 minio 中的 MINIO_ROOT_PASSWORD
       - TRANSPORTER=nats://nats:4222
       - CACHER=redis://redis:6379
-      - INSTANCES=1 # Nodejs Cluster 集群进程数
+      - INSTANCES=2 # Nodejs Cluster 集群进程数
     depends_on:
       - redis
       - mongo
@@ -44,8 +47,9 @@ services:
     environment:
       - MINIO_ROOT_USER=minio-root-user # 此处必须修改
       - MINIO_ROOT_PASSWORD=minio-root-password # 此处必须修改
+      - MINIO_DEFAULT_BUCKETS=steedos-prod
     volumes:
-      - monio-data:/data
+      - steedos-minio-data:/data
     ports:
       - "9000:9000"
       - "9001:9001" 
@@ -53,7 +57,7 @@ services:
   mongo:
     image: mongo:4.4
     volumes:
-      - mongo-data:/data/db
+      - steedos-mongo-data:/data/db
     command: mongod --oplogSize 128 --profile=1 --slowms=500 --replSet rs0 --bind_ip_all
     ports:
       - "27017:27017"
@@ -79,7 +83,6 @@ services:
 
 
 volumes:
-  mongo-data:
-  steedos-data:
+  steedos-mongo-data:
   steedos-packages:
-  minio-data:
+  steedos-minio-data:
