@@ -11,3 +11,9 @@ https://github.com/nats-io/nats-docker
 cd 2.8
 docker build --tag steedos/nats:2.8.4 .
 ```
+
+## Publish
+
+```
+docker push steedos/nats:2.8.4
+```
