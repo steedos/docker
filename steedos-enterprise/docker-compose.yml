@@ -35,6 +35,7 @@ services:
       - MAX_PAYLOAD=4096000
     ports:
       - "4222:4222"
+      - "8222:8222" # monitor port
 
   mongo:
     image: mongo:4.4
