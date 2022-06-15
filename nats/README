@@ -1,0 +1,13 @@
+NATS Docker
+===
+
+修改默认的配置文件。
+
+https://github.com/nats-io/nats-docker
+
+## Build
+
+```
+cd 2.8
+docker build --tag steedos/nats:2.8.4 .
+```

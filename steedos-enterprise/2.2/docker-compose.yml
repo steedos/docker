@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  steedos:
+    image: steedos/steedos-project-template:2.2
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - "steedos-data:/app/storage"
+    environment:
+      - ROOT_URL=http://127.0.0.1:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
+      - PORT=3000 #在此填入服务运行的端口
+      - MONGO_URL=mongodb://mongo:27017/steedos
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
+      - STEEDOS_CFS_STORE=local
+      - STEEDOS_STORAGE_DIR=/app/storage
+      - TRANSPORTER=nats://nats:4222
+      - CACHER=redis://redis:6379/2
+    depends_on:
+      - redis
+      - mongo
+      - nats
+    
+  redis:
+    image: redis:6.2
+    restart: always
+    command: ["/bin/sh","-c", "redis-server --save \"\" --appendonly no"]
+    ports:
+      - "6379:6379"
+ 
+  nats:
+    image: steedos/nats:2.8.4
+    restart: always
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+  mongo:
+    image: mongo:4.4
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    command: mongod --oplogSize 128 --profile=1 --slowms=500 --replSet rs0 --bind_ip_all
+    ports:
+      - "27017:27017"
+
+  # this container's job is just run the command to initialize the replica set.
+  # it will run the command and remove himself (it will not stay running)
+  mongo-init-replica:
+    image: mongo:4.4
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          mongo mongo/steedos --eval \"
+            rs.initiate({
+              _id: 'rs0',
+              version: 1,
+              members: [ { _id: 0, host: 'mongo:27017' } ]})\" &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit $$s)"
+    depends_on:
+      - mongo
+
+
+volumes:
+  mongo-data:
+  steedos-data:
