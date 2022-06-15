@@ -3,7 +3,6 @@ version: "3.9"
 services:
   steedos:
     image: steedos/steedos-project-template:2.2
-    restart: always
     ports:
       - "3000:3000"
     volumes:
@@ -25,21 +24,20 @@ services:
     
   redis:
     image: redis:6.2
-    restart: always
     command: ["/bin/sh","-c", "redis-server --save \"\" --appendonly no"]
     ports:
       - "6379:6379"
  
   nats:
     image: steedos/nats:2.8.4
-    restart: always
+    environment:
+      - MAX_PAYLOAD=4096000
     ports:
       - "4222:4222"
       - "8222:8222"
 
   mongo:
     image: mongo:4.4
-    restart: always
     volumes:
       - mongo-data:/data/db
     command: mongod --oplogSize 128 --profile=1 --slowms=500 --replSet rs0 --bind_ip_all

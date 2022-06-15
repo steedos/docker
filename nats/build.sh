@@ -1,0 +1,1 @@
+docker build --tag steedos/nats:2.8.4 ./2.8
