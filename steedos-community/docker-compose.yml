@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   steedos:
-    image: steedos/steedos-community:2.2
+    image: steedos/steedos-community:2022.6
     command: "yarn start"
     ports:
       - "3000:3000"
@@ -39,6 +39,17 @@ services:
       - "4222:4222"
       - "8222:8222" # monitor port
 
+  minio:
+    image: bitnami/minio:2022.6.11
+    environment:
+      - MINIO_ROOT_USER=minio-root-user # 此处必须修改
+      - MINIO_ROOT_PASSWORD=minio-root-password # 此处必须修改
+    volumes:
+      - monio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001" 
+
   mongo:
     image: mongo:4.4
     volumes:
@@ -71,3 +82,4 @@ volumes:
   mongo-data:
   steedos-data:
   steedos-packages:
+  minio-data:
