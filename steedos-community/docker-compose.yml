@@ -8,6 +8,7 @@ services:
       - "3000:3000"
     volumes:
       - "steedos-data:/app/storage"
+      - "steedos-packages:/app/.steedos"
     environment:
       - ROOT_URL=http://127.0.0.1:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
       - PORT=3000 #在此填入服务运行的端口
@@ -25,7 +26,7 @@ services:
     
   redis:
     image: redis:6.2
-    command: "redis-server --loglevel warning"
+    command: "redis-server --save \"\" --appendonly no --loglevel warning"
     ports:
       - "6379:6379"
  
@@ -68,3 +69,4 @@ services:
 volumes:
   mongo-data:
   steedos-data:
+  steedos-packages:
