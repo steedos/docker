@@ -1,0 +1,1 @@
+docker build --tag steedos/steedos-community:2.2 ./2.2
