@@ -7,7 +7,6 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - "steedos-data:/app/storage"
       - "steedos-packages:/app/.steedos"
     environment:
       - ROOT_URL=http://127.0.0.1:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
@@ -50,7 +49,7 @@ services:
       - MINIO_ROOT_PASSWORD=minio-root-password # 此处必须修改
       - MINIO_DEFAULT_BUCKETS=steedos-prod
     volumes:
-      - minio-data:/data
+      - steedos-minio-data:/data
     ports:
       - "9000:9000"
       - "9001:9001" 
@@ -58,7 +57,7 @@ services:
   mongo:
     image: mongo:4.4
     volumes:
-      - mongo-data:/data/db
+      - steedos-mongo-data:/data/db
     command: mongod --oplogSize 128 --profile=1 --slowms=500 --replSet rs0 --bind_ip_all
     ports:
       - "27017:27017"
@@ -84,7 +83,6 @@ services:
 
 
 volumes:
-  mongo-data:
-  steedos-data:
+  steedos-mongo-data:
   steedos-packages:
-  minio-data:
+  steedos-minio-data:
