@@ -23,7 +23,7 @@ services:
       - INSTANCES=1 # Nodejs Cluster 集群进程数
     depends_on:
       - redis
-      - mongodb-primary
+      - mongodb
     
   redis:
     image: redis:6.2
