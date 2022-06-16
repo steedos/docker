@@ -23,7 +23,7 @@ services:
       - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=minio-root-password # 此处必须修改为 minio 中的 MINIO_ROOT_PASSWORD
       - TRANSPORTER=nats://nats:4222
       - CACHER=redis://redis:6379
-      - INSTANCES=2 # Nodejs Cluster 集群进程数
+      - INSTANCES=1 # Nodejs Cluster 集群进程数
     depends_on:
       - redis
       - mongo
