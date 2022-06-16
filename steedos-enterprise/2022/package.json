@@ -1,14 +1,15 @@
 {
-    "name": "@steedos/steedos-community",
+    "name": "@steedos/steedos-enterprise",
     "version": "1.0.0",
     "private": true,
     "scripts": {
-      "start": "moleculer-runner services/community.service.js --instances=${INSTANCES}"
+      "start": "moleculer-runner services/enterprise.service.js --instances=${INSTANCES}"
     },
     "author": "steedos",
     "license": "MIT",
     "dependencies": {
-      "@steedos/service-community": "^2.2"
+      "@steedos/service-community": "^2.2",
+      "@steedos/service-enterprise": "^2.2"
     },
     "resolutions": {
       "typeorm": "0.2.28",
