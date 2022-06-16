@@ -9,10 +9,10 @@ services:
     volumes:
       - "steedos-packages:/app/.steedos"
     environment:
-      - ROOT_URL=http://127.0.0.1:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
+      - ROOT_URL=http://steedos-community:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
       - PORT=3000 #在此填入服务运行的端口
-      - MONGO_URL=mongodb://mongo:27017/steedos
-      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - MONGO_URL=mongodb://root:password123@mongodb:27017/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
+      - MONGO_OPLOG_URL=mongodb://root:password123@mongodb:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com
       - STEEDOS_CFS_STORE=S3
@@ -26,7 +26,7 @@ services:
       - INSTANCES=1 # Nodejs Cluster 集群进程数
     depends_on:
       - redis
-      - mongo
+      - mongodb-primary
       - nats
     
   redis:
@@ -55,32 +55,17 @@ services:
       - "9000:9000"
       - "9001:9001" 
   
-  mongo:
-    image: mongo:4.4
-    volumes:
-      - steedos-mongo-data:/data/db
-    command: mongod --oplogSize 128 --profile=1 --slowms=500 --replSet rs0 --bind_ip_all
+  mongodb:
+    image: 'bitnami/mongodb:4.4'
     ports:
-      - "27017:27017"
-
-  # this container's job is just run the command to initialize the replica set.
-  # it will run the command and remove himself (it will not stay running)
-  mongo-init-replica:
-    image: mongo:4.4
-    command: >
-      bash -c
-        "for i in `seq 1 30`; do
-          mongo mongo/steedos --eval \"
-            rs.initiate({
-              _id: 'rs0',
-              version: 1,
-              members: [ { _id: 0, host: 'mongo:27017' } ]})\" &&
-          s=$$? && break || s=$$?;
-          echo \"Tried $$i times. Waiting 5 secs...\";
-          sleep 5;
-        done; (exit $$s)"
-    depends_on:
-      - mongo
+      - 27017:27017
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_ROOT_PASSWORD=password123
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+    volumes:
+      - 'steedos-mongo-data:/bitnami'
 
 
 volumes:
