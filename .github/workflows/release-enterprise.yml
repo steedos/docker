@@ -51,7 +51,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push
+      - name: Build and  2.2
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
         uses: docker/build-push-action@v3
         with:
           context: ./steedos-enterprise/2.2
