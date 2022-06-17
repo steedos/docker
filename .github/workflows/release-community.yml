@@ -52,6 +52,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Build and push 2.1
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.1') }}
+        uses: docker/build-push-action@v3
+        with:
+          context: ./steedos-community/2.1
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
       - name: Build and push 2.2
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
         uses: docker/build-push-action@v3
