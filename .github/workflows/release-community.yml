@@ -55,10 +55,12 @@ jobs:
 
       - name: Replace Version Tag 2.1
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.1') }}
-        uses: datamonsters/replace-action@v2
+        uses: jacobtomlinson/gha-find-replace@v2
         with:
-          files: ./steedos-community/2.1/package.json
-          replacements: '~2.1,${{steps.branch-name.outputs.tag}}'
+          include: ./steedos-community/2.1/package.json
+          find: "~2.1"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
 
       - name: Build and push 2.1
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.1') }}
@@ -72,10 +74,12 @@ jobs:
 
       - name: Replace Version Tag 2.2
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
-        uses: datamonsters/replace-action@v2
+        uses: jacobtomlinson/gha-find-replace@v2
         with:
-          files: ./steedos-community/2.2/package.json
-          replacements: '~2.2,${{steps.branch-name.outputs.tag}}'
+          include: ./steedos-community/2.1/package.json
+          find: "~2.2"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
 
       - name: Build and push 2.2
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
