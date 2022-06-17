@@ -53,11 +53,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Replace Version Tag 2.1
+      - name: Replace Version ~2.1 to Tag
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.1') }}
         uses: jacobtomlinson/gha-find-replace@v2
         with:
-          include: ./steedos-community/2.1/package.json
+          include: steedos-community/2.1/package.json
           find: "~2.1"
           replace: ${{steps.branch-name.outputs.tag}}
           regex: false
@@ -72,11 +72,11 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Replace Version Tag 2.2
+      - name: Replace Version ~2.2 to Tag
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
         uses: jacobtomlinson/gha-find-replace@v2
         with:
-          include: ./steedos-community/2.2/package.json
+          include: steedos-community/2.2/package.json
           find: "~2.2"
           replace: ${{steps.branch-name.outputs.tag}}
           regex: false
