@@ -3,7 +3,7 @@ name: Build and push steedos/steedos-enterprise
 on:
   push:
     tags:
-     - 'v**'
+     - 'v2.2.*'
 jobs:
   docker:
     runs-on: ubuntu-latest
