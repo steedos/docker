@@ -17,7 +17,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     
   steedos:
-    image: steedos/steedos-enterprise:2022.6
+    image: steedos/steedos-enterprise:2.2
     command: "yarn start"
     ports:
       - "3000:3000"

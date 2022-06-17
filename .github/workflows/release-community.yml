@@ -40,9 +40,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=schedule,pattern={{date 'YYYY.MM.DD'}}
-            type=schedule,pattern={{date 'YYYY.MM'}}
-            type=schedule,pattern={{date 'YYYY'}}
+            type=schedule
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
