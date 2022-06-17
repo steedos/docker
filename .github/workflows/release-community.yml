@@ -57,7 +57,7 @@ jobs:
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.1') }}
         uses: datamonsters/replace-action@v2
         with:
-          files: /steedos-community/2.1/package.json
+          files: ./steedos-community/2.1/package.json
           replacements: '~2.1,${{steps.branch-name.outputs.tag}}'
 
       - name: Build and push 2.1
@@ -74,7 +74,7 @@ jobs:
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
         uses: datamonsters/replace-action@v2
         with:
-          files: /steedos-community/2.2/package.json
+          files: ./steedos-community/2.2/package.json
           replacements: '~2.2,${{steps.branch-name.outputs.tag}}'
 
       - name: Build and push 2.2
