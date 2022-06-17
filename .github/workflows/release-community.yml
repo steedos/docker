@@ -76,7 +76,7 @@ jobs:
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
         uses: jacobtomlinson/gha-find-replace@v2
         with:
-          include: ./steedos-community/2.1/package.json
+          include: ./steedos-community/2.2/package.json
           find: "~2.2"
           replace: ${{steps.branch-name.outputs.tag}}
           regex: false
