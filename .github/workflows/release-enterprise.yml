@@ -51,7 +51,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and  2.2
+      - name: Build and push 2.2
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
         uses: docker/build-push-action@v3
         with:
