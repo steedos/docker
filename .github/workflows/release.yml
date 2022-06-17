@@ -13,7 +13,10 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
-      - uses: actions/checkout@
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
       - name: Get branch names
         id: branch-name
         uses: tj-actions/branch-names@v5.2
@@ -21,7 +24,7 @@ jobs:
       - name: Current branch name
         run: |
           echo "${{ steps.branch-name.outputs.current_branch }}"
-          
+
       - name: Get the current tag
         if: steps.branch-name.outputs.is_tag == 'true'  # Replaces: startsWith(github.ref, 'refs/tags/')
         run: |
