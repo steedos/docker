@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   steedos:
-    image: steedos/steedos-community:2.1
+    image: steedos/steedos-community:2.2
     command: "yarn start"
     ports:
       - "3000:3000"
@@ -18,6 +18,8 @@ services:
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com
       - STEEDOS_CFS_STORE=local
       - STEEDOS_STORAGE_DIR=app/storage
+      - STEEDOS_TENANT_ENABLE_CREATE_TENANT=true
+      - STEEDOS_TENANT_ENABLE_REGISTER=true
       - TRANSPORTER=redis://redis:6379/2
       - CACHER=redis://redis:6379
       - INSTANCES=1 # Nodejs Cluster 集群进程数
