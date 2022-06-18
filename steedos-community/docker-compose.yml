@@ -18,8 +18,9 @@ services:
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com
       - STEEDOS_CFS_STORE=local
       - STEEDOS_STORAGE_DIR=app/storage
-      - STEEDOS_TENANT_ENABLE_CREATE_TENANT=true
-      - STEEDOS_TENANT_ENABLE_REGISTER=true
+      - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
+      - STEEDOS_TENANT_ENABLE_MOBILE_CODE_LOGIN=true
+      - STEEDOS_TENANT_ENABLE_EMAIL_CODE_LOGIN=true
       - TRANSPORTER=redis://redis:6379/2
       - CACHER=redis://redis:6379
       - INSTANCES=1 # Nodejs Cluster 集群进程数

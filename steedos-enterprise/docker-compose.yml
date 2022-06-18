@@ -30,6 +30,10 @@ services:
       - MONGO_OPLOG_URL=mongodb://root:password123@mongodb-primary:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com
+      - STEEDOS_TENANT_ENABLE_ACTIVATION=true
+      - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
+      - STEEDOS_TENANT_ENABLE_MOBILE_CODE_LOGIN=true
+      - STEEDOS_TENANT_ENABLE_EMAIL_CODE_LOGIN=true
       - STEEDOS_CFS_STORE=S3
       - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
       - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
