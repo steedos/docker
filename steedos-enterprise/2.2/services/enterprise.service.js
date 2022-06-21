@@ -22,6 +22,7 @@ module.exports = {
             mixins: [SteedosService],
             settings: {
                 plugins: [
+                    "@steedos/ee_unpkg-local",
                     "@steedos/webapp-accounts",
                     "@steedos/plugin-dingtalk",
                     "@steedos/plugin-qywx",
