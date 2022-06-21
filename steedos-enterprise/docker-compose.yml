@@ -25,11 +25,11 @@ services:
       - "steedos-packages:/app/.steedos"
     environment:
       - ROOT_URL=http://steedos-enterprise:80 # 此处修改为实际IP或域名，以及traefik的端口
-      - PORT=3000 #在此填入服务运行的端口
+      - PORT=3000 # 在此填入服务运行的端口
       - MONGO_URL=mongodb://root:password123@mongodb-primary,mongodb-secondary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - MONGO_OPLOG_URL=mongodb://root:password123@mongodb-primary:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
-      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com
+      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # 国内请使用此CDN，海外去掉使用 https://unpkg.com
       - STEEDOS_TENANT_ENABLE_ACTIVATION=true
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
       - STEEDOS_CFS_STORE=S3

@@ -11,11 +11,11 @@ services:
       - "steedos-data:/app/storage"
     environment:
       - ROOT_URL=http://steedos-community:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
-      - PORT=3000 #在此填入服务运行的端口
+      - PORT=3000 # 在此填入服务运行的端口
       - MONGO_URL=mongodb://root:password123@mongodb:27017/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - MONGO_OPLOG_URL=mongodb://root:password123@mongodb:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
-      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com
+      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com # 国内请使用此CDN，海外去掉使用 https://unpkg.com
       - STEEDOS_CFS_STORE=local
       - STEEDOS_STORAGE_DIR=/app/storage
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
