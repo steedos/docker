@@ -8,8 +8,7 @@
     "author": "steedos",
     "license": "MIT",
     "dependencies": {
-      "@steedos/service-community": "^2.2",
-      "@steedos/service-enterprise": "^2.2"
+      "@steedos/service-enterprise": "~2.2"
     },
     "resolutions": {
       "typeorm": "0.2.28",
