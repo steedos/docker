@@ -51,6 +51,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Replace Version ~2.2 to Tag
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: steedos-enterprise/2.2/package.json
+          find: "~2.2"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
+
       - name: Build and push 2.2
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.2') }}
         uses: docker/build-push-action@v3
