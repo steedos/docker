@@ -1,12 +1,12 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - name: Steedos Enterprise
+  - name: Steedos Community
     command: |
-      cd steedos-enterprise
+      cd steedos-community
       docker-compose up
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 ports:
-  - port: 8000
+  - port: 3000
     onOpen: open-browser
     visibility: public
