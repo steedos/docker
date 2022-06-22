@@ -1,7 +1,6 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
   - name: Steedos Enterprise
-    init: 
     command: |
       cd steedos-enterprise
       docker-compose up
