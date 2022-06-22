@@ -155,9 +155,9 @@ services:
       - S3_ENDPOINT=http://minio:9000
       - S3_FORCE_PATH_STYLE=1
       - S3_SIGNATURE_VERSION=v4
-      - S3_BUCKET=steedos-prod # Optional
+      - S3_BUCKET=nodered-prod # Optional
       - S3_REGION=
-      - S3_APP_NAME=nodered # Directory on S3
+      - S3_APP_NAME=steedos # Directory on S3
     volumes:
       - steedos-nodered-data:/data
     ports:
