@@ -29,6 +29,7 @@
         }
     ],
     "dependencies": {
+        "@steedos/node-red-contrib-steedos": "^2.0.2",
         "node-red": "2.2.2"
     },
     "engines": {

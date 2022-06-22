@@ -20,25 +20,24 @@ RUN set -ex && \
         openssl \
         openssh-client \
         ca-certificates && \
-    mkdir -p /usr/src/node-red /data && \
+    mkdir -p /app /data && \
     deluser --remove-home node && \
-    adduser -h /usr/src/node-red -D -H node-red -u 1000 && \
+    adduser -h /app -D -H node-red -u 1000 && \
     chown -R node-red:root /data && chmod -R g+rwX /data && \
-    chown -R node-red:root /usr/src/node-red && chmod -R g+rwX /usr/src/node-red
+    chown -R node-red:root /app && chmod -R g+rwX /app
     # chown -R node-red:node-red /data && \
-    # chown -R node-red:node-red /usr/src/node-red
+    # chown -R node-red:node-red /app
 
 # Set work directory
-WORKDIR /usr/src/node-red
+WORKDIR /app
 
 # Setup SSH known_hosts file
 COPY known_hosts.sh .
-RUN ./known_hosts.sh /etc/ssh/ssh_known_hosts && rm /usr/src/node-red/known_hosts.sh
+RUN ./known_hosts.sh /etc/ssh/ssh_known_hosts && rm /app/known_hosts.sh
 
 # package.json contains Node-RED NPM module and node dependencies
 COPY package.json .
 COPY flows.json /data
-COPY settings.js /data
 
 
 #### Stage BUILD #######################################################################################################
@@ -72,10 +71,12 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
     org.label-schema.arch=${ARCH} \
     authors="Steedos Inc."
 
-COPY --from=build /usr/src/node-red/prod_node_modules ./node_modules
+COPY --from=build /app/prod_node_modules ./node_modules
+
+COPY settings.js .
 
 # Chown, install devtools & Clean up
-RUN chown -R node-red:root /usr/src/node-red && \
+RUN chown -R node-red:root /app && \
     /tmp/install_devtools.sh && \
     rm -r /tmp/*
 
@@ -83,8 +84,8 @@ USER root
 
 # Env variables
 ENV NODE_RED_VERSION=$NODE_RED_VERSION \
-    NODE_PATH=/usr/src/node-red/node_modules:/data/node_modules \
-    PATH=/usr/src/node-red/node_modules/.bin:${PATH} \
+    NODE_PATH=/app/node_modules:/data/node_modules \
+    PATH=/app/node_modules/.bin:${PATH} \
     FLOWS=flows.json
 
 # ENV NODE_RED_ENABLE_SAFE_MODE=true    # Uncomment to enable safe start mode (flows not running)
@@ -96,4 +97,4 @@ EXPOSE 1880
 # Add a healthcheck (default every 30 secs)
 # HEALTHCHECK CMD curl http://localhost:1880/ || exit 1
 
-ENTRYPOINT ["npm", "start", "--cache", "/data/.npm", "--", "--userDir", "/data"]
+ENTRYPOINT ["npm", "start", "--cache", "/data/.npm", "--", "--userDir", "/data", "-s", "./settings.js"]

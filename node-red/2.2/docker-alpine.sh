@@ -14,3 +14,5 @@ docker build --rm --no-cache \
     --build-arg TAG_SUFFIX=default \
     --file Dockerfile \
     --tag steedos/node-red .
+
+docker tag steedos/node-red steedos/node-red:${NODE_RED_VERSION}
