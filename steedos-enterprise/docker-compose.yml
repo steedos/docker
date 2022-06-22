@@ -153,18 +153,21 @@ services:
     image: steedos/node-red:latest
     environment:
       - TZ=Asia/Beijing
+      - PORT=1880
       - NODE_RED_USERNAME=root
       - NODE_RED_PASSWORD=nodered123
       - NODE_RED_THEME_TITLE=Steedos Node-RED
-      - NODE_RED_STORAGE=s3
-      - S3_ACCESS_KEY_ID=minio-root-user
-      - S3_SECRET_ACCESS_KEY=minio-root-password
-      - S3_ENDPOINT=http://minio:9000
-      - S3_FORCE_PATH_STYLE=1
-      - S3_SIGNATURE_VERSION=v4
-      - S3_BUCKET=nodered-prod # Optional
-      - S3_REGION=
-      - S3_APP_NAME=steedos # Directory on S3
+      - NODE_RED_STORAGE=mongodb
+      - NODE_RED_MONGO_URL=mongodb://root:password123@mongodb-primary,mongodb-secondary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
+      # - NODE_RED_STORAGE=s3
+      # - S3_ACCESS_KEY_ID=minio-root-user
+      # - S3_SECRET_ACCESS_KEY=minio-root-password
+      # - S3_ENDPOINT=http://minio:9000
+      # - S3_FORCE_PATH_STYLE=1
+      # - S3_SIGNATURE_VERSION=v4
+      # - S3_BUCKET=nodered-prod # Optional
+      # - S3_REGION=
+      # - S3_APP_NAME=steedos # Directory on S3
     volumes:
       - steedos-nodered-data:/data
     ports:

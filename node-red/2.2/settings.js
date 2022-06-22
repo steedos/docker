@@ -534,5 +534,14 @@
         //    *   - reason: if result is false, the HTTP reason string to return
         //    */
         //},
-        storageModule: process.env.NODE_RED_STORAGE === 's3' ? require("@sapianco/node-red-contrib-storage-s3"):null,
+        storageModule: process.env.NODE_RED_STORAGE === 's3' ? require("@sapianco/node-red-contrib-storage-s3") 
+            : process.env.NODE_RED_STORAGE === 'mongodb'? require("@steedos/node-red-contrib-mongodb-storage") 
+            : null,
+            
+        mongodbSettings: {
+            // The name of the service instance to use.
+            mongoURI: process.env.NODE_RED_MONGO_URL,
+            // The prefix for all document names stored by this instance.
+            appname: process.env.NODE_RED_APP_NAME || "default"
+        }
     }
