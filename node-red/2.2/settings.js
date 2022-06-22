@@ -534,4 +534,5 @@
         //    *   - reason: if result is false, the HTTP reason string to return
         //    */
         //},
+        storageModule: process.env.NODE_RED_STORAGE === 's3' ? require("@sapianco/node-red-contrib-storage-s3"):null,
     }

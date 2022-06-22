@@ -29,6 +29,7 @@
         }
     ],
     "dependencies": {
+        "@sapianco/node-red-contrib-storage-s3": "^1.0.3",
         "@steedos/node-red-contrib-steedos": "^2.0.2",
         "node-red": "2.2.2"
     },

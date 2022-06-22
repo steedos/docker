@@ -7,18 +7,18 @@
 version: "3.9"
 
 services:
-  node-red:
+  nodered:
     image: steedos/node-red:latest
     environment:
       - TZ=Asia/Beijing
       - NODE_RED_USERNAME=root
       - NODE_RED_PASSWORD=nodered123
-      - NODE_RED_THEME_TITLE=Steedos Flows
+      - NODE_RED_THEME_TITLE=Steedos Node-RED
     volumes:
-      - node-red-data:/data
+      - nodered-data:/data
     ports:
       - "1880:1880"
 
 
 volumes:
-  node-red-data:
+  nodered-data:
