@@ -2,20 +2,22 @@ version: "3.9"
 
 services:
 
+  # Reverse Proxy
   traefik:
     image: traefik:v2.8
     command: --api.insecure=true --providers.docker --entryPoints.web.address=:80 --entryPoints.websecure.address=:443
     ports:
       # The HTTP port
-      - "80:80"
+      - "8000:80"
       # The HTTPS port
-      - "443:443"
+      - "8443:443"
       # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-    
+
+  # Steedos Platform  
   steedos:
     image: steedos/steedos-enterprise:2.2
     command: "yarn start"
@@ -48,6 +50,7 @@ services:
       - mongodb-primary
       - nats
     
+  # Cache Service  
   redis:
     image: bitnami/redis:6.2
     command: "/opt/bitnami/scripts/redis/run.sh --save \"\" --appendonly no --loglevel warning"
@@ -56,6 +59,7 @@ services:
     ports:
       - "6379:6379"
  
+  # Micro Service Transporter
   nats:
     image: steedos/nats:2.8.4
     environment:
@@ -64,6 +68,7 @@ services:
       - "4222:4222"
       - "8222:8222" # monitor port
 
+  # S3 Storage Service
   minio:
     image: bitnami/minio:2022.6.11
     environment:
@@ -76,6 +81,7 @@ services:
       - "9000:9000"
       - "9001:9001" 
 
+  # Database Service Cluster
   mongodb-primary:
     image: 'bitnami/mongodb:4.4'
     ports:
@@ -141,7 +147,8 @@ services:
 
       TIME_SCHEDULE: "0 0 * * *"
       TIME_LOCATION: Asia/Taipei
-      
+
+  # Low-code programming for event-driven applications    
   nodered:
     image: steedos/node-red:latest
     environment:
