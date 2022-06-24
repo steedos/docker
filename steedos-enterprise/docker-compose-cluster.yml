@@ -13,7 +13,7 @@ services:
     environment:
       - ROOT_URL=${STEEDOS_ROOT_URL} # 此处修改为实际IP或域名，以及traefik的端口
       - PORT=3000 # 在此填入服务运行的端口
-      - MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
+      - MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary,mongodb-secondary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - MONGO_OPLOG_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # 国内请使用此CDN，海外去掉使用 https://unpkg.com
@@ -63,6 +63,7 @@ services:
       - "9000:9000"
       - "9001:9001" 
 
+  # Database Service Cluster
   mongodb-primary:
     image: 'bitnami/mongodb:4.4'
     ports:
@@ -73,7 +74,62 @@ services:
       - MONGODB_ROOT_PASSWORD=${MONGODB_PASSWORD}
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
     volumes:
-      - 'steedos-mongodb-primary-data:/bitnami'
+      - 'steedos-mongo-primary-data:/bitnami'
+
+  mongodb-secondary:
+    image: 'bitnami/mongodb:4.4'
+    depends_on:
+      - mongodb-primary
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-secondary
+      - MONGODB_REPLICA_SET_MODE=secondary
+      - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+
+  mongodb-arbiter:
+    image: 'bitnami/mongodb:4.4'
+    depends_on:
+      - mongodb-primary
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-arbiter
+      - MONGODB_REPLICA_SET_MODE=arbiter
+      - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+
+  # 每日备份数据库到S3
+  # mongodb-backup-cron:
+  #   image: appleboy/docker-backup-database:mongo-4.4
+  #   depends_on:
+  #     - mongodb-primary
+  #     - minio
+  #   logging:
+  #     options:
+  #       max-size: "100k"
+  #       max-file: "3"
+  #   environment:
+  #     STORAGE_DRIVER: s3
+  #     STORAGE_ENDPOINT: minio:9000
+  #     STORAGE_BUCKET: mongo-backup
+  #     STORAGE_PATH: prod
+  #     STORAGE_SSL: "false"
+  #     STORAGE_INSECURE_SKIP_VERIFY: "false"
+  #     ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+  #     SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
+
+  #     DATABASE_DRIVER: mongo
+  #     DATABASE_HOST: mongodb-primary:27017
+  #     DATABASE_USERNAME: ${MONGODB_USERNAME}
+  #     DATABASE_PASSWORD: ${MONGODB_PASSWORD}
+  #     DATABASE_NAME: steedos
+  #     DATABASE_OPTS: --authenticationDatabase=admin
+
+  #     TIME_SCHEDULE: "0 0 * * *"
+  #     TIME_LOCATION: Asia/Taipei
 
   # Low-code programming for event-driven applications    
   nodered:
@@ -85,7 +141,7 @@ services:
       - NODE_RED_PASSWORD=${NODE_RED_PASSWORD}
       - NODE_RED_THEME_TITLE=Steedos Node-RED
       - NODE_RED_STORAGE=mongodb
-      - NODE_RED_MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
+      - NODE_RED_MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary,mongodb-secondary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       # - NODE_RED_STORAGE=s3
       # - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
       # - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
@@ -105,7 +161,7 @@ volumes:
     driver: local
   steedos-minio-data:
     driver: local
-  steedos-mongodb-primary-data:
+  steedos-mongo-primary-data:
     driver: local
   steedos-nodered-data:
     driver: local
