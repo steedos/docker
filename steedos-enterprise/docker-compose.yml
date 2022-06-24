@@ -2,21 +2,6 @@ version: "3.9"
 
 services:
 
-  # Reverse Proxy
-  traefik:
-    image: traefik:v2.8
-    command: --api.insecure=true --providers.docker --entryPoints.web.address=:80 --entryPoints.websecure.address=:443
-    ports:
-      # The HTTP port
-      - "8000:80"
-      # The HTTPS port
-      - "8443:443"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
-    volumes:
-      # So that Traefik can listen to the Docker events
-      - /var/run/docker.sock:/var/run/docker.sock
-
   # Steedos Platform  
   steedos:
     image: steedos/steedos-enterprise:2.2
@@ -43,8 +28,6 @@ services:
       - TRANSPORTER=nats://nats:4222
       - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
       - INSTANCES=1 # Nodejs Cluster 集群进程数
-    labels:
-      - traefik.http.routers.steedos.rule=PathPrefix(`/`) # 此处修改为实际IP或域名
     depends_on:
       - redis
       - mongodb-primary
