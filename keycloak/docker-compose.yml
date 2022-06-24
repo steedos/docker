@@ -11,7 +11,7 @@ services:
       - 'postgres_data:/var/lib/postgresql/data'
 
   keycloak:
-    image: quay.io/keycloak/keycloak:18.0.1
+    image: steedos/keycloak
     environment:
       - KEYCLOAK_ADMIN=${KEYCLOAK_USER}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
@@ -22,8 +22,9 @@ services:
       - KC_DB_URL=jdbc:postgresql://postgres/${POSTGRES_DB}
       - KC_DB_USERNAME=${POSTGRES_USER}
       - KC_DB_PASSWORD=${POSTGRES_PASSWORD}
+      - KC_HOSTNAME_STRICT=false
     command:
-      - "start --auto-build --hostname-strict=false"
+      - "start"
     depends_on:
       - postgres
     ports:
