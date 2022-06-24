@@ -17,7 +17,6 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
       - PROXY_ADDRESS_FORWARDING=true
       - KC_HTTP_ENABLED=true
-      # - KC_HOSTNAME=${KEYCLOAK_HOSTNAME}
       - KC_PROXY=edge
       - KC_DB=postgres
       - KC_DB_URL=jdbc:postgresql://postgres/${POSTGRES_DB}
