@@ -11,7 +11,7 @@ services:
       - 'postgres_data:/var/lib/postgresql/data'
 
   keycloak:
-    image: steedos/keycloak
+    image: steedos/keycloak:latest
     environment:
       - KEYCLOAK_ADMIN=${KEYCLOAK_USER}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
