@@ -1,4 +1,6 @@
-FROM quay.io/keycloak/keycloak:18.0.1 as builder
+ARG KEYCLOAK_VERSION=18.0.2
+
+FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION} as builder
 
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
@@ -9,7 +11,7 @@ RUN curl -sL https://github.com/steedos/keywind/raw/master/steedos-theme.jar -o 
 
 RUN /opt/keycloak/bin/kc.sh build
 
-FROM quay.io/keycloak/keycloak:18.0.1
+FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 WORKDIR /opt/keycloak
 
