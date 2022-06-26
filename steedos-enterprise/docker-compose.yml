@@ -12,7 +12,6 @@ services:
       - "steedos-packages:/app/.steedos"
     environment:
       - ROOT_URL=${STEEDOS_ROOT_URL} 
-      - PORT=3000 
       - MONGO_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb/${MONGODB_DATABASE}?authSource=admin
       - MONGO_OPLOG_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb:27017/local?authSource=admin
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
