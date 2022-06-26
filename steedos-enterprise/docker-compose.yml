@@ -11,23 +11,23 @@ services:
     volumes:
       - "steedos-packages:/app/.steedos"
     environment:
-      - ROOT_URL=${STEEDOS_ROOT_URL} # 此处修改为实际IP或域名，以及traefik的端口
-      - PORT=3000 # 在此填入服务运行的端口
+      - ROOT_URL=${STEEDOS_ROOT_URL} 
+      - PORT=3000 
       - MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - MONGO_OPLOG_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
-      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # 国内请使用此CDN，海外去掉使用 https://unpkg.com
+      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # CDN in china, default is https://unpkg.com
       - STEEDOS_TENANT_ENABLE_ACTIVATION=true
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
       - STEEDOS_CFS_STORE=S3
       - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
       - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
       - STEEDOS_CFS_AWS_S3_BUCKET=steedos-prod
-      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}  # 此处必须修改为 minio 中的 MINIO_ROOT_USER
-      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY} # 此处必须修改为 minio 中的 MINIO_ROOT_PASSWORD
+      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY} 
+      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
       - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
       - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
-      - INSTANCES=1 # Nodejs Cluster 集群进程数
+      - INSTANCES=1 # Nodejs Cluster Instances
     depends_on:
       - redis
       - mongodb-primary

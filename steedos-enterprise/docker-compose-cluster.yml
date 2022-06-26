@@ -11,23 +11,23 @@ services:
     volumes:
       - "steedos-packages:/app/.steedos"
     environment:
-      - ROOT_URL=${STEEDOS_ROOT_URL} # 此处修改为实际IP或域名，以及traefik的端口
-      - PORT=3000 # 在此填入服务运行的端口
+      - ROOT_URL=${STEEDOS_ROOT_URL} 
+      - PORT=3000 
       - MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary,mongodb-secondary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - MONGO_OPLOG_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
-      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # 国内请使用此CDN，海外去掉使用 https://unpkg.com
+      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # CDN in china, default is https://unpkg.com
       - STEEDOS_TENANT_ENABLE_ACTIVATION=true
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
       - STEEDOS_CFS_STORE=S3
       - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
       - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
       - STEEDOS_CFS_AWS_S3_BUCKET=steedos-prod
-      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}  # 此处必须修改为 minio 中的 MINIO_ROOT_USER
-      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY} # 此处必须修改为 minio 中的 MINIO_ROOT_PASSWORD
+      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY} 
+      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY} 
       - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
       - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
-      - INSTANCES=1 # Nodejs Cluster 集群进程数
+      - INSTANCES=1 # Nodejs Cluster Instances
     depends_on:
       - redis
       - mongodb-primary
@@ -51,7 +51,7 @@ services:
       - NATS_PASSWORD=${NATS_PASSWORD}
     ports:
       - "4222:4222"
-      # - "8222:8222" # monitor port
+      # - "8222:8222" # nats monitor port
 
   # S3 Storage Service
   minio:
@@ -63,7 +63,7 @@ services:
       - steedos-minio-data:/data
     ports:
       - "9000:9000"
-      # - "9001:9001" 
+      # - "9001:9001" # minio admin console
 
   # Database Service Cluster
   mongodb-primary:
@@ -103,7 +103,6 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
 
-  # 每日备份数据库到S3
   # mongodb-backup-cron:
   #   image: appleboy/docker-backup-database:mongo-4.4
   #   depends_on:
@@ -133,30 +132,6 @@ services:
   #     TIME_SCHEDULE: "0 0 * * *"
   #     TIME_LOCATION: Asia/Taipei
 
-  # Low-code programming for event-driven applications    
-  nodered:
-    image: steedos/node-red:latest
-    environment:
-      - TZ=Asia/Beijing
-      - PORT=1880
-      - NODE_RED_USERNAME=${NODE_RED_USERNAME}
-      - NODE_RED_PASSWORD=${NODE_RED_PASSWORD}
-      - NODE_RED_THEME_TITLE=Steedos Node-RED
-      - NODE_RED_STORAGE=mongodb
-      - NODE_RED_MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary,mongodb-secondary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
-      # - NODE_RED_STORAGE=s3
-      # - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
-      # - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
-      # - S3_ENDPOINT=http://minio:9000
-      # - S3_FORCE_PATH_STYLE=1
-      # - S3_SIGNATURE_VERSION=v4
-      # - S3_BUCKET=nodered-prod # Optional
-      # - S3_REGION=
-      # - S3_APP_NAME=steedos # Directory on S3
-    volumes:
-      - steedos-nodered-data:/data
-    ports:
-      - "1880:1880"
 
 volumes:
   steedos-packages:
@@ -164,6 +139,4 @@ volumes:
   steedos-minio-data:
     driver: local
   steedos-mongo-primary-data:
-    driver: local
-  steedos-nodered-data:
     driver: local
