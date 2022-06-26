@@ -1,9 +1,16 @@
 NATS Docker
 ===
 
-修改默认的配置文件。
-
 https://github.com/nats-io/nats-docker
+
+修改默认的配置文件，增加环境变量
+
+```
+MAX_PAYLOAD: 4096000
+NATS_USERNAME: nats
+NATS_PASSWORD: nats
+```
+
 
 ## Build
 

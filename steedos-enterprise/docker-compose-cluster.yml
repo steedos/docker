@@ -25,7 +25,7 @@ services:
       - STEEDOS_CFS_AWS_S3_BUCKET=steedos-prod
       - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}  # 此处必须修改为 minio 中的 MINIO_ROOT_USER
       - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY} # 此处必须修改为 minio 中的 MINIO_ROOT_PASSWORD
-      - TRANSPORTER=nats://nats:4222
+      - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
       - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
       - INSTANCES=1 # Nodejs Cluster 集群进程数
     depends_on:
@@ -47,9 +47,11 @@ services:
     image: steedos/nats
     environment:
       - MAX_PAYLOAD=4096000 #4MB
+      - NATS_USERNAME=${NATS_USERNAME}
+      - NATS_PASSWORD=${NATS_PASSWORD}
     ports:
       - "4222:4222"
-      - "8222:8222" # monitor port
+      # - "8222:8222" # monitor port
 
   # S3 Storage Service
   minio:
@@ -61,7 +63,7 @@ services:
       - steedos-minio-data:/data
     ports:
       - "9000:9000"
-      - "9001:9001" 
+      # - "9001:9001" 
 
   # Database Service Cluster
   mongodb-primary:
