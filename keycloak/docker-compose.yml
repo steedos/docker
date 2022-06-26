@@ -24,6 +24,7 @@ services:
       - KC_DB_URL=jdbc:postgresql://postgres/${POSTGRES_DB}
       - KC_DB_USERNAME=${POSTGRES_USER}
       - KC_DB_PASSWORD=${POSTGRES_PASSWORD}
+      - KC_HOSTNAME=${KC_HOSTNAME}
       - KC_HOSTNAME_STRICT=false
       - KC_SPI_THEME_DEFAULT=steedos
     command:
