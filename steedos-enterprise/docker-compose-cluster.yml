@@ -13,9 +13,8 @@ services:
     environment:
       - ROOT_URL=${STEEDOS_ROOT_URL} 
       - PORT=3000 
-      - MONGO_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary,mongodb-secondary/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
-      - MONGO_OPLOG_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-primary:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
-      - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
+      - MONGO_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb-primary,mongodb-secondary/${MONGODB_DATABASE}?authSource=admin
+      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb-primary:27017/local?authSource=admin
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # CDN in china, default is https://unpkg.com
       - STEEDOS_TENANT_ENABLE_ACTIVATION=true
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
@@ -23,8 +22,8 @@ services:
       - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
       - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
       - STEEDOS_CFS_AWS_S3_BUCKET=steedos-prod
-      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY} 
-      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY} 
+      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ROOT_USER} 
+      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD} 
       - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
       - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
       - INSTANCES=1 # Nodejs Cluster Instances
@@ -57,8 +56,8 @@ services:
   minio:
     image: minio/minio
     environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - steedos-minio-data:/data
     ports:
@@ -74,7 +73,8 @@ services:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-primary
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_ROOT_PASSWORD=${MONGODB_PASSWORD}
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME}
+      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
     volumes:
       - 'steedos-mongo-primary-data:/bitnami'
 
@@ -88,7 +88,8 @@ services:
       - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
       - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
       - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=${MONGODB_PASSWORD}
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME}
+      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
 
   mongodb-arbiter:
     image: 'bitnami/mongodb:4.4'
@@ -101,7 +102,8 @@ services:
       - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
       - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=${MONGODB_PASSWORD}
       - ALLOW_EMPTY_PASSWORD=yes
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME}
+      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
 
   # mongodb-backup-cron:
   #   image: appleboy/docker-backup-database:mongo-4.4
@@ -119,8 +121,8 @@ services:
   #     STORAGE_PATH: prod
   #     STORAGE_SSL: "false"
   #     STORAGE_INSECURE_SKIP_VERIFY: "false"
-  #     ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
-  #     SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
+  #     ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+  #     SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
 
   #     DATABASE_DRIVER: mongo
   #     DATABASE_HOST: mongodb-primary:27017

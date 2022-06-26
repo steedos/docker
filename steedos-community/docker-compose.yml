@@ -12,8 +12,8 @@ services:
     environment:
       - ROOT_URL=http://steedos-community:3000 #在此填入客户端访问服务输入的域名（或IP）和端口
       - PORT=3000 # 在此填入服务运行的端口
-      - MONGO_URL=mongodb://root:password123@mongodb:27017/steedos?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
-      - MONGO_OPLOG_URL=mongodb://root:password123@mongodb:27017/local?authSource=admin&replicaSet=replicaset&readPreference=primary&ssl=false
+      - MONGO_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb:27017/steedos?authSource=admin
+      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb:27017/local?authSource=admin
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com # 国内请使用此CDN，海外去掉使用 https://unpkg.com
       - STEEDOS_CFS_STORE=local
@@ -39,10 +39,24 @@ services:
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb
       - MONGODB_REPLICA_SET_MODE=primary
-      - MONGODB_ROOT_PASSWORD=password123
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      - MONGODB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME}
+      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
     volumes:
       - 'steedos-mongo-data:/bitnami'
+
+  watchtower-service:
+    restart: always
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --debug --http-api-update steedos
+    environment:
+      - WATCHTOWER_HTTP_API=true
+      - WATCHTOWER_HTTP_API_TOKEN=budibase
+      - WATCHTOWER_CLEANUP=true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
 
 volumes:
   steedos-mongo-data:
