@@ -13,8 +13,8 @@ services:
     environment:
       - ROOT_URL=${STEEDOS_ROOT_URL} 
       - PORT=3000 
-      - MONGO_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb/${MONGODB_DATABASE}?authSource=admin
-      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb:27017/local?authSource=admin
+      - MONGO_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb/${MONGODB_DATABASE}?authSource=admin
+      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb:27017/local?authSource=admin
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.20/dist/assets.json
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # CDN in china, default is https://unpkg.com
       - STEEDOS_TENANT_ENABLE_ACTIVATION=true
@@ -74,7 +74,7 @@ services:
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb
       - MONGODB_REPLICA_SET_MODE=primary
-      - MONGODB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
       - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME}
       - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
     volumes:
@@ -90,7 +90,7 @@ services:
       - NODE_RED_PASSWORD=${NODE_RED_PASSWORD}
       - NODE_RED_THEME_TITLE=Steedos Node-RED
       # - NODE_RED_STORAGE=mongodb
-      # - NODE_RED_MONGO_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb/${MONGODB_DATABASE}?authSource=admin
+      # - NODE_RED_MONGO_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb/${MONGODB_DATABASE}?authSource=admin
       - NODE_RED_STORAGE=s3
       - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}
       - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
