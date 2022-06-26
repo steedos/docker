@@ -1,4 +1,4 @@
-# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+
 tasks:
   - name: Steedos
     command: |
@@ -10,3 +10,7 @@ ports:
   - port: 3000
     onOpen: open-browser
     visibility: public
+
+vscode:
+  extensions:
+    - cweijan.vscode-mysql-client2

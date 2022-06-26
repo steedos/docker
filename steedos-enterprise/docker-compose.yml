@@ -81,6 +81,7 @@ services:
   nodered:
     image: steedos/node-red:latest
     environment:
+      - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
       - TZ=Asia/Beijing
       - NODE_RED_USERNAME=${NODE_RED_USERNAME}
       - NODE_RED_PASSWORD=${NODE_RED_PASSWORD}
