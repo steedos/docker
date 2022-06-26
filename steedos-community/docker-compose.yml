@@ -53,7 +53,7 @@ services:
     command: --debug --http-api-update steedos
     environment:
       - WATCHTOWER_HTTP_API=true
-      - WATCHTOWER_HTTP_API_TOKEN=budibase
+      - WATCHTOWER_HTTP_API_TOKEN=steedos
       - WATCHTOWER_CLEANUP=true
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
