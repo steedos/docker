@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app-name: keycloak
+  name: keycloak
+  namespace: huayan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app-name: keycloak
+  template:
+    metadata:
+      labels:
+        app-name: keycloak
+    spec:
+      nodeSelector:
+        failure-domain.beta.kubernetes.io/zone: cn-northwest-1c
+      containers:
+      - args:
+        - start -Dkeycloak.frontendUrl=https://id.aws1.steedos.cn -Dkeycloak.forceBackendUrlToFrontendUrl=true
+        env:
+        - name: KC_DB
+          value: postgres
+        - name: KC_DB_PASSWORD
+          value: keycloak
+        - name: KC_DB_URL
+          value: jdbc:postgresql://keycloak.csovoibc5kly.rds.cn-northwest-1.amazonaws.com.cn/keycloak-17
+        - name: KC_DB_USERNAME
+          value: keycloak
+        - name: KC_HOSTNAME_STRICT
+          value: "false"
+        # - name: KC_HOSTNAME
+        #   value: "id.aws1.steedos.cn"
+        - name: KC_HTTP_ENABLED
+          value: "true"
+        - name: KC_PROXY
+          value: passthrough
+        - name: KC_SPI_THEME_DEFAULT
+          value: steedos
+        - name: KEYCLOAK_ADMIN
+          value: keycloak
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: keycloak
+        # - name: KC_HOSTNAME-STRICT-HTTPS
+        #   value: "false"
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        image: steedos/keycloak:17.0.0
+        name: keycloak
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
