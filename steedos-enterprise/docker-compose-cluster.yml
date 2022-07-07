@@ -7,7 +7,7 @@ services:
     image: steedos/steedos-enterprise:2.2
     command: "yarn start"
     ports:
-      - "3000:3000"
+      - "${STEEDOS_PORT}:3000"
     volumes:
       - "steedos-packages:/app/.steedos"
     environment:
@@ -28,6 +28,11 @@ services:
       - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
       - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
       - INSTANCES=1 # Nodejs Cluster Instances
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
     depends_on:
       - redis
       - mongodb-primary
