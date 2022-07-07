@@ -6,10 +6,8 @@ RUN apt-get update || : && apt-get install -y \
 
 WORKDIR /app
 
-ADD services ./services/
 ADD package.json .
-ADD moleculer.config.js .
-ADD steedos-config.yml .
+ADD steedos.config.js .
 
 ENV NODE_ENV=production
 
