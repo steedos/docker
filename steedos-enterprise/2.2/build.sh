@@ -2,7 +2,7 @@
 export STEEDOS_VERSION=2.2
 
 echo "#########################################################################"
-echo "node-red version: ${NODE_RED_VERSION}"
+echo "steedos enterprise version: ${STEEDOS_VERSION}"
 echo "#########################################################################"
 
 docker build --rm --no-cache \
