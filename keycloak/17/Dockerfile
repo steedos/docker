@@ -8,6 +8,7 @@ ENV KC_METRICS_ENABLED=true
 ENV KC_DB=postgres
 
 RUN curl -sL https://github.com/steedos/keywind/raw/master/steedos-theme.jar -o /opt/keycloak/providers/steedos-theme.jar
+RUN curl -sL https://github.com/steedos/keycloak-services-social-weixin/raw/master/keycloak-weixin.jar -o /opt/keycloak/providers/keycloak-weixin.jar
 
 RUN /opt/keycloak/bin/kc.sh build
 

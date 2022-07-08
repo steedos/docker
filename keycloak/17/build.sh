@@ -11,7 +11,4 @@ docker build --rm --no-cache \
     --file Dockerfile \
     --tag steedos/keycloak .
 
-docker tag steedos/keycloak steedos/keycloak:${KEYCLOAK_VERSION}
-
 # docker push steedos/keycloak
-# docker push steedos/keycloak:${KEYCLOAK_VERSION}
