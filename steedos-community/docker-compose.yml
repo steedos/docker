@@ -11,15 +11,15 @@ services:
       - "steedos-data:/app/storage"
     environment:
       - ROOT_URL=${STEEDOS_ROOT_URL} 
-      - MONGO_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb:27017/steedos?authSource=admin
-      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD}@mongodb:27017/local?authSource=admin
+      - MONGO_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/${MONGODB_DATABASE:-steedos}?authSource=admin
+      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/local?authSource=admin
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com # CDN in china, default is https://unpkg.com
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.32/dist/assets.json
       - STEEDOS_CFS_STORE=local
       - STEEDOS_STORAGE_DIR=/app/storage
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
-      - TRANSPORTER=redis://:${REDIS_PASSWORD}@redis:6379/2
-      - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
+      - TRANSPORTER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379/2
+      - CACHER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379
       - INSTANCES=1 # Nodejs Cluster Instances
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
@@ -32,22 +32,27 @@ services:
     
   redis:
     image: redis:6.2
-    command: "redis-server --requirepass ${REDIS_PASSWORD}  --save \"\" --appendonly no --loglevel warning"
+    command: "redis-server --requirepass ${REDIS_PASSWORD:-steedos}  --save \"\" --appendonly no --loglevel warning"
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-steedos}
     ports:
       - "6379:6379"
   
   mongodb:
     image: 'bitnami/mongodb:4.4'
+    restart: on-failure
     ports:
       - 27017:27017
     environment:
-      - MONGODB_ADVERTISED_HOSTNAME=mongodb
       - MONGODB_REPLICA_SET_MODE=primary
-      - MONGODB_ROOT_PASSWORD=${MONGODB_PASSWORD}
-      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME}
-      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
+      - MONGODB_ROOT_PASSWORD=${MONGODB_PASSWORD:-steedos}
+      - MONGODB_PORT_NUMBER=${MONGODB_PORT_NUMBER:-27017}
+      - MONGODB_INITIAL_PRIMARY_HOST=${MONGODB_INITIAL_PRIMARY_HOST:-mongodb}
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}
+      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME:-steedos}
+      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY:-steedos}
+      - MONGODB_ENABLE_JOURNAL=${MONGODB_ENABLE_JOURNAL:-true}
+      - MONGODB_ADVERTISED_HOSTNAME=${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
     volumes:
       - 'steedos-mongo-data:/bitnami'
 
