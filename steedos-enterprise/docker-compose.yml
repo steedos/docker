@@ -7,13 +7,13 @@ services:
     image: steedos/steedos-enterprise:2.2
     command: "yarn start"
     ports:
-      - "${STEEDOS_PORT}:3000"
+      - "${STEEDOS_PORT:-3000}:3000"
     volumes:
       - "steedos-packages:/app/.steedos"
     environment:
       - ROOT_URL=${STEEDOS_ROOT_URL} 
-      - MONGO_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb/${MONGODB_DATABASE}?authSource=admin
-      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb:27017/local?authSource=admin
+      - MONGO_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/${MONGODB_DATABASE:-steedos}?authSource=admin
+      - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/local?authSource=admin
       - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.32/dist/assets.json
       - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # CDN in china, default is https://unpkg.com
       - STEEDOS_TENANT_ENABLE_ACTIVATION=true
@@ -22,10 +22,10 @@ services:
       - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
       - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
       - STEEDOS_CFS_AWS_S3_BUCKET=steedos-prod
-      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ROOT_USER} 
-      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
-      - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
-      - CACHER=redis://:${REDIS_PASSWORD}@redis:6379
+      - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-steedos} 
+      - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-steedos123}
+      - TRANSPORTER=nats://${NATS_USERNAME:-steedos}:${NATS_USERNAME:-steedos}@nats:4222
+      - CACHER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379
       - INSTANCES=1 # Nodejs Cluster Instances
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
@@ -41,9 +41,9 @@ services:
   # Cache Service  
   redis:
     image: redis:6.2
-    command: "redis-server --requirepass ${REDIS_PASSWORD}  --save \"\" --appendonly no --loglevel warning"
+    command: "redis-server --requirepass ${REDIS_PASSWORD:-steedos}  --save \"\" --appendonly no --loglevel warning"
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-steedos}
     ports:
       - "6379:6379"
  
@@ -52,8 +52,8 @@ services:
     image: steedos/nats
     environment:
       - MAX_PAYLOAD=4096000 #4MB
-      - NATS_USERNAME=${NATS_USERNAME}
-      - NATS_PASSWORD=${NATS_PASSWORD}
+      - NATS_USERNAME=${NATS_USERNAME:-steedos}
+      - NATS_PASSWORD=${NATS_PASSWORD:-steedos}
     ports:
       - "4222:4222"
       - "8222:8222" # monitor port
@@ -63,8 +63,8 @@ services:
     image: minio/minio
     command: "server /data --console-address :9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-steedos}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-steedos123}
     volumes:
       - steedos-minio-data:/data
     ports:
@@ -76,11 +76,15 @@ services:
     ports:
       - 27017:27017
     environment:
-      - MONGODB_ADVERTISED_HOSTNAME=mongodb
       - MONGODB_REPLICA_SET_MODE=primary
-      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
-      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME}
-      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
+      - MONGODB_ROOT_PASSWORD=${MONGODB_PASSWORD:-steedos}
+      - MONGODB_PORT_NUMBER=${MONGODB_PORT_NUMBER:-27017}
+      - MONGODB_INITIAL_PRIMARY_HOST=${MONGODB_INITIAL_PRIMARY_HOST:-mongodb}
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}
+      - MONGODB_REPLICA_SET_NAME=${MONGODB_REPLICA_SET_NAME:-steedos}
+      - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY:-steedos}
+      - MONGODB_ENABLE_JOURNAL=${MONGODB_ENABLE_JOURNAL:-true}
+      - MONGODB_ADVERTISED_HOSTNAME=${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
     volumes:
       - 'steedos-mongodb-data:/bitnami'
 
@@ -88,16 +92,16 @@ services:
   nodered:
     image: steedos/node-red:latest
     environment:
-      - TRANSPORTER=nats://${NATS_USERNAME}:${NATS_USERNAME}@nats:4222
+      - TRANSPORTER=nats://${NATS_USERNAME:-steedos}:${NATS_USERNAME:-steedos}@nats:4222
       - TZ=Asia/Beijing
-      - NODE_RED_USERNAME=${NODE_RED_USERNAME}
-      - NODE_RED_PASSWORD=${NODE_RED_PASSWORD}
+      - NODE_RED_USERNAME=${NODE_RED_USERNAME:-steedos}
+      - NODE_RED_PASSWORD=${NODE_RED_PASSWORD:-steedos}
       - NODE_RED_THEME_TITLE=Steedos Node-RED
       # - NODE_RED_STORAGE=mongodb
       # - NODE_RED_MONGO_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb/${MONGODB_DATABASE}?authSource=admin
       - NODE_RED_STORAGE=s3
-      - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}
-      - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-steedos}
+      - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-steedos123}
       - S3_ENDPOINT=http://minio:9000
       - S3_FORCE_PATH_STYLE=1
       - S3_SIGNATURE_VERSION=v4
