@@ -5,7 +5,7 @@ services:
     image: steedos/steedos-community:2.2
     command: "yarn start"
     ports:
-      - "${STEEDOS_PORT}:3000"
+      - "${STEEDOS_PORT:-3000}:3000"
     volumes:
       - "steedos-installed-packages:/app/.steedos"
       - "steedos-data:/app/storage"
