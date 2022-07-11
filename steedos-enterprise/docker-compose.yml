@@ -33,10 +33,14 @@ services:
       timeout: 10s
       retries: 3
     depends_on:
-      - redis
-      - mongodb
-      - minio
-      - nats
+      redis:
+        condition: service_started
+      mongodb:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      nats:
+        condition: service_started
     
   # Cache Service  
   redis:
@@ -85,6 +89,11 @@ services:
       - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY:-steedos}
       - MONGODB_ENABLE_JOURNAL=${MONGODB_ENABLE_JOURNAL:-true}
       - MONGODB_ADVERTISED_HOSTNAME=${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo admin -u root -p ${MONGODB_PASSWORD:-steedos} --quiet | grep 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
     volumes:
       - 'steedos-mongodb-data:/bitnami'
 
