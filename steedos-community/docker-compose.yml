@@ -13,8 +13,6 @@ services:
       - ROOT_URL=${STEEDOS_ROOT_URL} 
       - MONGO_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/${MONGODB_DATABASE:-steedos}?authSource=admin
       - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/local?authSource=admin
-      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com # CDN in china, default is https://unpkg.com
-      - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.32/dist/assets.json
       - STEEDOS_CFS_STORE=local
       - STEEDOS_STORAGE_DIR=/app/storage
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
