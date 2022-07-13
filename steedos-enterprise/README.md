@@ -14,7 +14,7 @@ docker-compose up
 docker-compose down
 ```
 
-## Env
+## Environment variables 
 
 copy .env.sample to .env 
 
