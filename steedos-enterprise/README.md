@@ -1,6 +1,5 @@
 # Steedos Enterprise Edition
 
-
 ## Getting Started
 
 ### Start Services
@@ -15,27 +14,19 @@ docker-compose up
 docker-compose down
 ```
 
-### Clean Valumes
-
-```
-docker-compose down
-docker volume rm steedos-enterprise_steedos-minio-data
-docker volume rm steedos-mongodb-data
-```
-
 ## Env
 
 copy .env.sample to .env 
 
 ```
-# 初始安装的软件包
+# Initial Steedos Packages
 STEEDOS_INITIAL_PACKAGES=@steedos-labs/master,@steedos-labs/contract,@steedos-labs/project,@steedos-labs/oa,@steedos-labs/workflow,@steedos-labs/app-cost-control
 
-# 平台访问地址
+# Platform Endpoint
 STEEDOS_PORT=3000
 STEEDOS_ROOT_URL=http://localhost:3000
 
-# 各种保密参数，生产环境请务必修改
+# Secrets
 MINIO_ROOT_USER=steedos
 MINIO_ROOT_PASSWORD=steedos123
 MINIO_DEFAULT_BUCKETS=steedos
@@ -48,6 +39,16 @@ NATS_USERNAME=steedos
 NATS_PASSWORD=steedos
 NODE_RED_USERNAME=steedos
 NODE_RED_PASSWORD=steedos
+```
+
+### Clean Data
+
+Clean all data.
+
+```
+docker-compose down
+docker volume rm steedos-enterprise_steedos-minio-data
+docker volume rm steedos-enterprise_steedos-mongodb-data
 ```
 
 ## Connect to MongoDB Cluster
