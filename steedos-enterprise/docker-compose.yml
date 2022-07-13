@@ -11,14 +11,14 @@ services:
     volumes:
       - "steedos-packages:/app/.steedos"
     environment:
-      - ROOT_URL=${STEEDOS_ROOT_URL} 
+      - ROOT_URL=${STEEDOS_ROOT_URL:-http://localhost:3000} 
       - MONGO_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/${MONGODB_DATABASE:-steedos}?authSource=admin
       - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/local?authSource=admin
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
       - STEEDOS_CFS_STORE=S3
       - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
       - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
-      - STEEDOS_CFS_AWS_S3_BUCKET=steedos-prod
+      - STEEDOS_CFS_AWS_S3_BUCKET=${MINIO_DEFAULT_BUCKETS:-steedos}
       - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-steedos} 
       - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-steedos123}
       - TRANSPORTER=nats://${NATS_USERNAME:-steedos}:${NATS_USERNAME:-steedos}@nats:4222
@@ -61,11 +61,11 @@ services:
 
   # S3 Storage Service
   minio:
-    image: minio/minio
-    command: "server /data --console-address :9001"
+    image: bitnami/minio
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-steedos}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-steedos123}
+      MINIO_DEFAULT_BUCKETS: ${MINIO_DEFAULT_BUCKETS:-steedos}
     volumes:
       - steedos-minio-data:/data
     ports:
