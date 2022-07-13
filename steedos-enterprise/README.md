@@ -41,7 +41,11 @@ NODE_RED_USERNAME=steedos
 NODE_RED_PASSWORD=steedos
 ```
 
-### Clean Data
+## Data Backup
+
+https://docs.docker.com/storage/volumes/#backup-restore-or-migrate-data-volumes
+
+## Data Clean
 
 Clean all data.
 
