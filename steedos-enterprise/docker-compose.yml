@@ -24,7 +24,6 @@ services:
       - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-steedos123}
       - TRANSPORTER=nats://${NATS_USERNAME:-steedos}:${NATS_USERNAME:-steedos}@nats:4222
       - CACHER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379
-      - INSTANCES=1 # Nodejs Cluster Instances
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 60s
