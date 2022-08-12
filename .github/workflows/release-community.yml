@@ -3,7 +3,9 @@ name: Build and push steedos/steedos-community
 on:
   push:
     tags:
-     - 'v**'
+     - 'v2.1.*'
+     - 'v2.2.*'
+     - 'v2.3.*'
 
 jobs:
   docker:

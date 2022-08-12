@@ -4,6 +4,7 @@ on:
   push:
     tags:
      - 'v2.2.*'
+     - 'v2.3.*'
 jobs:
   docker:
     runs-on: ubuntu-latest
