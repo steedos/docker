@@ -90,3 +90,22 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Replace Version ~2.3 to Tag
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.3') }}
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: steedos-community/2.3/package.json
+          find: "~2.3"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
+
+      - name: Build and push 2.3
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.3') }}
+        uses: docker/build-push-action@v3
+        with:
+          context: ./steedos-community/2.3
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
