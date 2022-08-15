@@ -40,7 +40,7 @@ services:
     
   # Cache Service  
   redis:
-    image: redis:6.2
+    image: ecr.aws.steedos.cn/dockerhub/bitnami/redis:6.2
     command: "redis-server --requirepass ${REDIS_PASSWORD}  --save \"\" --appendonly no --loglevel warning"
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
@@ -75,7 +75,7 @@ services:
 
   # Database Service Cluster
   mongodb-primary:
-    image: 'bitnami/mongodb:4.4'
+    image: 'ecr.aws.steedos.cn/dockerhub/bitnami/mongodb:4.4'
     ports:
       - 27017:27017
     environment:
@@ -88,7 +88,7 @@ services:
       - 'steedos-mongo-primary-data:/bitnami'
 
   mongodb-secondary:
-    image: 'bitnami/mongodb:4.4'
+    image: 'ecr.aws.steedos.cn/dockerhub/bitnami/mongodb:4.4'
     depends_on:
       - mongodb-primary
     environment:
@@ -101,7 +101,7 @@ services:
       - MONGODB_REPLICA_SET_KEY=${MONGODB_REPLICA_SET_KEY}
 
   mongodb-arbiter:
-    image: 'bitnami/mongodb:4.4'
+    image: 'ecr.aws.steedos.cn/dockerhub/bitnami/mongodb:4.4'
     depends_on:
       - mongodb-primary
     environment:
