@@ -3,7 +3,7 @@ tasks:
   - name: Steedos
     command: |
       cd steedos-enterprise
-      echo "ROOT_URL=$(gp url 5000)" >> .env
+      echo "STEEDOS_ROOT_URL=$(gp url 3000)" >> .env
       docker-compose up
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/

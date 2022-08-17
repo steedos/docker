@@ -1,4 +1,4 @@
-export NATS_VERSION=2.8.4
+export NATS_VERSION=2.8.5
 
 docker build  --rm --no-cache \
     --build-arg BUILD_DATE="$(date +"%Y-%m-%dT%H:%M:%SZ")" \

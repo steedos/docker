@@ -55,7 +55,7 @@ services:
  
   # Micro Service Transporter
   nats:
-    image: steedos/nats
+    image: steedos/nats:2.8.5
     environment:
       - MAX_PAYLOAD=8096000 #8MB
       - NATS_USERNAME=${NATS_USERNAME:-steedos}
