@@ -43,6 +43,8 @@ services:
         condition: service_started
       nats:
         condition: service_started
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     
   # Cache Service  
   redis:
@@ -125,6 +127,20 @@ services:
       - minio
     ports:
       - "1880:1880"
+
+  watchtower-service:
+    restart: always
+    image: containrrr/watchtower
+    ports:
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_DEBUG=true
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_SCHEDULE=0 0 1 * * *  # 每天1点定时检查更新，请确认当前时区，自定义调度规则
 
 volumes:
   steedos-packages:
