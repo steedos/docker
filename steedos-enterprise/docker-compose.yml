@@ -15,7 +15,6 @@ services:
       - MONGO_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/${MONGODB_DATABASE:-steedos}?authSource=admin
       - MONGO_OPLOG_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/local?authSource=admin
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
-      - STEEDOS_INITIAL_PACKAGES=${STEEDOS_INITIAL_PACKAGES}
       - STEEDOS_CFS_STORE=S3
       - STEEDOS_CFS_AWS_S3_ENDPOINT=http://minio:9000
       - STEEDOS_CFS_AWS_S3_FORCE_PATH_STYLE=true
@@ -24,6 +23,12 @@ services:
       - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-steedos123}
       - TRANSPORTER=nats://${NATS_USERNAME:-steedos}:${NATS_USERNAME:-steedos}@nats:4222
       - CACHER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379
+      - STEEDOS_IDENTITY_OIDC_ENABLED=true
+      - STEEDOS_IDENTITY_OIDC_CONFIG_URL=https://id.steedos.cn/realms/master/.well-known/openid-configuration
+      - STEEDOS_IDENTITY_OIDC_CLIENT_ID=steedos-oidc-public
+      - STEEDOS_IDENTITY_OIDC_CLIENT_SECRET=none
+      - STEEDOS_IDENTITY_OIDC_NAME=Steedos ID
+      - STEEDOS_INITIAL_PACKAGES="@steedos-labs/master@beta,@steedos-labs/contract@beta,@steedos-labs/contract-ee@beta,@steedos-labs/project@beta,@steedos-labs/project-ee@beta,@steedos-labs/finance@beta,@steedos-labs/finance-ee@beta,@steedos-labs/oa@beta,@steedos-labs/workflow@beta"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 60s
@@ -41,7 +46,7 @@ services:
     
   # Cache Service  
   redis:
-    image: ecr.aws.steedos.cn/dockerhub/bitnami/redis:6.2
+    image: bitnami/redis:6.2
     command: "redis-server --requirepass ${REDIS_PASSWORD:-steedos}  --save \"\" --appendonly no --loglevel warning"
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-steedos}
@@ -52,7 +57,7 @@ services:
   nats:
     image: steedos/nats
     environment:
-      - MAX_PAYLOAD=4096000 #4MB
+      - MAX_PAYLOAD=8096000 #8MB
       - NATS_USERNAME=${NATS_USERNAME:-steedos}
       - NATS_PASSWORD=${NATS_PASSWORD:-steedos}
     ports:
@@ -73,7 +78,7 @@ services:
       - "9001:9001" 
 
   mongodb:
-    image: 'ecr.aws.steedos.cn/dockerhub/bitnami/mongodb:4.4'
+    image: bitnami/mongodb:4.4
     ports:
       - 27017:27017
     environment:
