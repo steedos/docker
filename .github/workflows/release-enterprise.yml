@@ -1,4 +1,4 @@
-name: Build and push steedos/steedos-enterprise
+name: Build and push cn enterprise
 
 on:
   push:

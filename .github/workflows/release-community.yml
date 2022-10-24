@@ -1,4 +1,4 @@
-name: Build and push steedos/steedos-community
+name: Build and push community
 
 on:
   push:

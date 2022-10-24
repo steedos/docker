@@ -1,4 +1,4 @@
-name: Build and push steedos/steedos-community to cn
+name: Build and push cn community
 
 on:
   push:
