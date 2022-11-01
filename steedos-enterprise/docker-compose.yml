@@ -94,7 +94,7 @@ services:
       - MONGODB_ENABLE_JOURNAL=${MONGODB_ENABLE_JOURNAL:-true}
       - MONGODB_ADVERTISED_HOSTNAME=${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo admin -u root -p ${MONGODB_PASSWORD:-steedos} --quiet | grep 1
+      test: echo 'rs.status().ok' | mongo admin -u root -p ${MONGODB_PASSWORD:-steedos} --quiet | grep 1
       interval: 10s
       timeout: 10s
       retries: 5
