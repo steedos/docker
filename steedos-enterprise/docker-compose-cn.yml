@@ -57,7 +57,7 @@ services:
  
   # Micro Service Transporter
   nats:
-    image: steedos/nats:2.8.5
+    image: ecr.aws.steedos.cn/dockerhub/steedos/nats:2.8.5
     environment:
       - MAX_PAYLOAD=8096000 #8MB
       - NATS_USERNAME=${NATS_USERNAME:-steedos}
@@ -103,7 +103,7 @@ services:
 
   # Low-code programming for event-driven applications    
   nodered:
-    image: steedos/node-red:latest
+    image: ecr.aws.steedos.cn/dockerhub/steedos/node-red:latest
     environment:
       - TRANSPORTER=nats://${NATS_USERNAME:-steedos}:${NATS_USERNAME:-steedos}@nats:4222
       - TZ=Asia/Beijing
