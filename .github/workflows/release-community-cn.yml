@@ -4,6 +4,7 @@ on:
      - 'v2.1.*'
      - 'v2.2.*'
      - 'v2.3.*'
+     - 'v2.4.*'
 
 jobs:
   docker:
@@ -114,5 +115,25 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+   
+      - name: Replace Version ~2.4 to Tag
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.4') }}
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: steedos-community/2.4/package.json
+          find: "~2.4"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
+
+      - name: Build and push 2.4
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.4') }}
+        uses: docker/build-push-action@v3
+        with:
+          context: ./steedos-community/2.4
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+   
    
    
