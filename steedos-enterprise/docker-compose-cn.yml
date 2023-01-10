@@ -4,7 +4,7 @@ services:
 
   # Steedos Platform  
   steedos:
-    image: ecr.aws.steedos.cn/dockerhub/steedos/steedos-enterprise:2.2
+    image: ecr.aws.steedos.cn/dockerhub/steedos/steedos-enterprise:2.3
     command: "yarn start"
     ports:
       - "${STEEDOS_PORT:-3000}:3000"
