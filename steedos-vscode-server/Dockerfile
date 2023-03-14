@@ -28,18 +28,6 @@ RUN sudo apt-get update \
     && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 
-
-# Install MongoDB
-# Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition
-# USER root
-# RUN mkdir -p /tmp/mongodb && \
-#     cd /tmp/mongodb && \
-#     wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.4.19.tgz && \
-#     tar xf mongodb.tgz && \
-#     cd mongodb-* && \
-#     sudo cp bin/* /usr/local/bin/ && \
-#     rm -rf /tmp/mongodb
-
 # Install MongoDB Shell aka MongoSH (was part of Mongo 5, but, is separate now)
 RUN mkdir -p /tmp/mongosh && \
     cd /tmp/mongosh && \
