@@ -4,28 +4,27 @@ ENV DEBIAN_FRONTEND noninteractive
 
 USER root
 RUN sudo apt-get update \
-    && sudo apt-get install apt-utils \
+    && sudo apt-get install \
+    # apt-utils \
     ca-certificates \
-    libssl-dev \
+    # libssl-dev \
     curl \
     gnupg \
-    lsb-release -y
+    # lsb-release \
+    -y
 
 
 ### Docker ###
-USER root
-# https://docs.docker.com/engine/install/ubuntu/
-# RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
-#     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-#     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 
-RUN sudo mkdir -m 0755 -p /etc/apt/keyrings
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-RUN echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-RUN sudo chmod a+r /etc/apt/keyrings/docker.gpg
-RUN sudo apt-get update \
-    && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+# USER root
+# # https://docs.docker.com/engine/install/ubuntu/
+# RUN sudo mkdir -m 0755 -p /etc/apt/keyrings
+# RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+# RUN echo \
+#   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+#   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# RUN sudo chmod a+r /etc/apt/keyrings/docker.gpg
+# RUN sudo apt-get update \
+#     && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 
 # Install MongoDB Shell aka MongoSH (was part of Mongo 5, but, is separate now)
@@ -52,9 +51,9 @@ RUN mkdir -p /tmp/mongodb && \
 
 # Install Redis
 USER root
-RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list \
-    && sudo apt-get update \
+# RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
+#     && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list \
+RUN sudo apt-get update \
     && apt-get install -y redis
 
 
