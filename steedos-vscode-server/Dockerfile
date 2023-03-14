@@ -1,19 +1,44 @@
 FROM gitpod/openvscode-server:latest
 
+ENV DEBIAN_FRONTEND noninteractive
+
 USER root
 RUN sudo apt-get update \
-    && sudo apt-get install lsb-core -y
+    && sudo apt-get install apt-utils \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release -y
+
+
+### Docker ###
+USER root
+# https://docs.docker.com/engine/install/ubuntu/
+# RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+#     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+#     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 
+RUN sudo mkdir -m 0755 -p /etc/apt/keyrings
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+RUN echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN sudo chmod a+r /etc/apt/keyrings/docker.gpg
+RUN sudo apt-get update \
+    && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+
 
 # Install MongoDB
 # Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition
 USER root
 RUN mkdir -p /tmp/mongodb && \
     cd /tmp/mongodb && \
-    wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.2.17.tgz && \
+    wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.4.19.tgz && \
     tar xf mongodb.tgz && \
     cd mongodb-* && \
     sudo cp bin/* /usr/local/bin/ && \
     rm -rf /tmp/mongodb
+
 
 # Install Redis
 USER root
@@ -22,22 +47,6 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
     && sudo apt-get update \
     && apt-get install -y redis
 
-
-### Docker ###
-LABEL dazzle/layer=tool-docker
-LABEL dazzle/test=tests/tool-docker.yaml
-USER root
-# https://docs.docker.com/engine/install/ubuntu/
-RUN curl -o /var/lib/apt/dazzle-marks/docker.gpg -fsSL https://download.docker.com/linux/ubuntu/gpg \
-    && apt-key add /var/lib/apt/dazzle-marks/docker.gpg \
-    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
-    && install-packages docker-ce docker-ce-cli containerd.io
-
-RUN curl -o /usr/bin/slirp4netns -fsSL https://github.com/rootless-containers/slirp4netns/releases/download/v1.1.12/slirp4netns-$(uname -m) \
-    && chmod +x /usr/bin/slirp4netns
-
-RUN curl -o /usr/local/bin/docker-compose -fsSL https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64 \
-    && chmod +x /usr/local/bin/docker-compose
 
 # Install node
 USER openvscode-server
@@ -51,4 +60,6 @@ RUN export NVM_DIR="$HOME/.nvm" && \
         && npm install -g typescript yarn node-gyp
 ENV PATH=$PATH:/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin
 
- USER openvscode-server # to restore permissions for the web interface
+
+ # to restore permissions for the web interface
+ USER openvscode-server
