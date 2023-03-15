@@ -1,5 +1,5 @@
 #!/bin/bash
-export VSCODE_SERVER_VERSION=1.76.1
+export VSCODE_SERVER_VERSION=1.76.1-beta.1
 
 echo "#########################################################################"
 echo "steedos vscode server version: ${VSCODE_SERVER_VERSION}"
