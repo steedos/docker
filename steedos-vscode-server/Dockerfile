@@ -12,7 +12,7 @@ RUN sudo apt-get update \
     gnupg \
     python3 \
     g++ build-essential \
-    # lsb-release \
+    lsb-release \
     -y
 
 
@@ -41,16 +41,16 @@ RUN mkdir -p /tmp/mongosh && \
 
 # Install MongoDB
 # Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition
-# USER root
-# RUN mkdir -p /tmp/mongodb && \
-#     cd /tmp/mongodb && \
-#     wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-6.0.4.tgz && \
-#     tar xf mongodb.tgz && \
-#     cd mongodb-* && \
-#     sudo cp bin/* /usr/local/bin/ && \
-#     rm -rf /tmp/mongodb && \
-#     sudo mkdir -p /data/db && \
-#     sudo chown openvscode-server:openvscode-server -R /data/db
+USER root
+RUN mkdir -p /tmp/mongodb && \
+    cd /tmp/mongodb && \
+    wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-6.0.4.tgz && \
+    tar xf mongodb.tgz && \
+    cd mongodb-* && \
+    sudo cp bin/* /usr/local/bin/ && \
+    rm -rf /tmp/mongodb && \
+    sudo mkdir -p /data/db && \
+    sudo chown openvscode-server:openvscode-server -R /data/db
 
 
 # Install Redis
@@ -79,5 +79,5 @@ RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> "$HOME/.bashrc" \
     && echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> "$HOME/.bashrc"  
 
 
- # to restore permissions for the web interface
- USER openvscode-server
+# to restore permissions for the web interface
+USER root
