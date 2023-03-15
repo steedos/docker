@@ -7,9 +7,11 @@ RUN sudo apt-get update \
     && sudo apt-get install \
     # apt-utils \
     ca-certificates \
-    # libssl-dev \
+    libssl-dev \
     curl \
     gnupg \
+    python3 \
+    g++ build-essential \
     # lsb-release \
     -y
 
@@ -24,10 +26,11 @@ RUN sudo apt-get update \
 #   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 # RUN sudo chmod a+r /etc/apt/keyrings/docker.gpg
 # RUN sudo apt-get update \
-#     && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+#     && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 
 
 # Install MongoDB Shell aka MongoSH (was part of Mongo 5, but, is separate now)
+USER root
 RUN mkdir -p /tmp/mongosh && \
     cd /tmp/mongosh && \
     wget -qOmongosh.tgz https://downloads.mongodb.com/compass/mongosh-1.8.0-linux-x64.tgz && \
@@ -38,15 +41,16 @@ RUN mkdir -p /tmp/mongosh && \
 
 # Install MongoDB
 # Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition
-RUN mkdir -p /tmp/mongodb && \
-    cd /tmp/mongodb && \
-    wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-6.0.4.tgz && \
-    tar xf mongodb.tgz && \
-    cd mongodb-* && \
-    sudo cp bin/* /usr/local/bin/ && \
-    rm -rf /tmp/mongodb && \
-    sudo mkdir -p /data/db && \
-    sudo chown openvscode-server:openvscode-server -R /data/db
+# USER root
+# RUN mkdir -p /tmp/mongodb && \
+#     cd /tmp/mongodb && \
+#     wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-6.0.4.tgz && \
+#     tar xf mongodb.tgz && \
+#     cd mongodb-* && \
+#     sudo cp bin/* /usr/local/bin/ && \
+#     rm -rf /tmp/mongodb && \
+#     sudo mkdir -p /data/db && \
+#     sudo chown openvscode-server:openvscode-server -R /data/db
 
 
 # Install Redis
@@ -66,11 +70,13 @@ RUN export NVM_DIR="$HOME/.nvm" && \
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" \
         && nvm install $NODE_VERSION \
         && nvm alias default $NODE_VERSION \
-        && npm install -g typescript yarn node-gyp
+        && npm install -g yarn typescript node-gyp steedos-cli 
+            # node-gyp \
+            # typescript \
 ENV PATH=$PATH:$HOME/.nvm/versions/node/v${NODE_VERSION}/bin
 ENV NVM_DIR="$HOME/.nvm"
-RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> "${HOME}/.bashrc" \
-    && echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> "${HOME}/.bashrc"  
+RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> "$HOME/.bashrc" \
+    && echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> "$HOME/.bashrc"  
 
 
  # to restore permissions for the web interface

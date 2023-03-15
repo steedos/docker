@@ -6,10 +6,8 @@ echo "steedos vscode server version: ${VSCODE_SERVER_VERSION}"
 echo "#########################################################################"
 
 docker build --rm --no-cache \
-    --build-arg ARCH=amd64 \
     --build-arg NODE_VERSION=14 \
     --build-arg VSCODE_SERVER_VERSION=${VSCODE_SERVER_VERSION} \
-    --build-arg OS=alpine3.12 \
     --build-arg BUILD_DATE="$(date +"%Y-%m-%dT%H:%M:%SZ")" \
     --build-arg TAG_SUFFIX=default \
     --file Dockerfile \
