@@ -29,6 +29,11 @@ jobs:
         run: |
           echo "${{ steps.branch-name.outputs.tag }}"
 
+      - uses: nowsprinting/check-version-format-action@v3
+        id: version
+        with:
+          prefix: 'v'
+          
       - name: Check valid branch
         if: ${{ steps.version.outputs.is_stable != 'true' }}
         run: exit 1
