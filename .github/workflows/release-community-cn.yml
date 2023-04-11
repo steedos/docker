@@ -13,6 +13,7 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
+    
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -28,6 +29,10 @@ jobs:
         run: |
           echo "${{ steps.branch-name.outputs.tag }}"
 
+      - name: Check valid branch
+        if: ${{ steps.version.outputs.is_stable != 'true' }}
+        run: exit 1
+        
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
         with:
