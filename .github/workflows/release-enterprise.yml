@@ -4,6 +4,8 @@ on:
      - 'v2.2.*'
      - 'v2.3.*'
      - 'v2.4.*'
+     - 'v2.5.*'
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -112,6 +114,16 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./steedos-enterprise/2.4
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push 2.5
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.5') }}
+        uses: docker/build-push-action@v3
+        with:
+          context: ./steedos-enterprise/2.5
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}

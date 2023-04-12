@@ -1,0 +1,11 @@
+{
+  "name": "project-ee",
+  "version": "~2.5",
+  "private": true,
+  "scripts": {
+    "start": "steedos start"
+  },
+  "dependencies": {
+    "@steedos/service-enterprise": "~2.5"
+  }
+}

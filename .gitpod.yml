@@ -2,7 +2,7 @@
 tasks:
   - name: Steedos
     command: |
-      cd steedos-enterprise
+      cd steedos-community
       echo "STEEDOS_ROOT_URL=$(gp url 3000)" >> .env
       docker-compose -f docker-compose-cn.yml up
 
