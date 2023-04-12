@@ -133,6 +133,15 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
    
    
+      - name: Replace Version ~2.5 to Tag
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.5') }}
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: steedos-community/2.5/package.json
+          find: "~2.5"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
+
       - name: Build and push 2.5
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.5') }}
         uses: docker/build-push-action@v3

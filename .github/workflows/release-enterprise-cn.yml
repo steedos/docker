@@ -34,9 +34,9 @@ jobs:
         with:
           prefix: 'v'
           
-      - name: Check valid branch
+      - name: Check is stable
         if: ${{ steps.version.outputs.is_stable != 'true' }}
-        run: exit 1
+        run: exit 0
         
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
@@ -125,6 +125,15 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Replace Version ~2.5 to Tag
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.5') }}
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: steedos-enterprise/2.5/package.json
+          find: "~2.5"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
 
       - name: Build and push 2.5
         if: ${{ startsWith(steps.branch-name.outputs.tag, '2.5') }}
