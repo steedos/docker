@@ -148,5 +148,24 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Replace Version ~2.6 to Tag
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.6') }}
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: steedos-community/2.6/package.json
+          find: "~2.6"
+          replace: ${{steps.branch-name.outputs.tag}}
+          regex: false
+
+      - name: Build and push 2.6
+        if: ${{ startsWith(steps.branch-name.outputs.tag, '2.6') }}
+        uses: docker/build-push-action@v3
+        with:
+          context: ./steedos-community/2.6
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
    
    
