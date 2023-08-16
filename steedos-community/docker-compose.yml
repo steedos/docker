@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   steedos:
-    image: steedos/steedos-community:2.4
+    image: steedos/steedos-community:2.5
     ports:
       - "3000:3000"
     environment:
