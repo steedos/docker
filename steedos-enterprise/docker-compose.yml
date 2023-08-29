@@ -4,7 +4,7 @@ services:
 
   # Steedos Platform  
   steedos:
-    image: steedos/steedos-enterprise:2.4
+    image: steedos/steedos-enterprise:2.5
     command: "yarn start"
     ports:
       - "${STEEDOS_PORT:-3000}:3000"
@@ -48,7 +48,7 @@ services:
     
   # Cache Service  
   redis:
-    image: bitnami/redis:6.2
+    image: bitnami/redis:6.0
     command: "redis-server --requirepass ${REDIS_PASSWORD:-steedos}  --save \"\" --appendonly no --loglevel warning"
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-steedos}
@@ -128,19 +128,19 @@ services:
     ports:
       - "1880:1880"
 
-  watchtower-service:
-    restart: always
-    image: containrrr/watchtower
-    ports:
-      - 8080:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_DEBUG=true
-      - WATCHTOWER_LABEL_ENABLE=true
-      - WATCHTOWER_SCHEDULE=0 0 1 * * *  # 每天1点定时检查更新，请确认当前时区，自定义调度规则
+  # watchtower-service:
+  #   restart: always
+  #   image: containrrr/watchtower
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /etc/localtime:/etc/localtime:ro
+  #   environment:
+  #     - WATCHTOWER_CLEANUP=true
+  #     - WATCHTOWER_DEBUG=true
+  #     - WATCHTOWER_LABEL_ENABLE=true
+  #     - WATCHTOWER_SCHEDULE=0 0 1 * * *  # 每天1点定时检查更新，请确认当前时区，自定义调度规则
 
 volumes:
   steedos-packages:

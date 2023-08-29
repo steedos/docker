@@ -4,7 +4,7 @@ services:
 
   # Steedos Platform  
   steedos:
-    image: steedos/steedos-enterprise:2.2
+    image: steedos/steedos-enterprise:2.5
     command: "yarn start"
     ports:
       - "${STEEDOS_PORT}:3000"
@@ -15,8 +15,6 @@ services:
       - PORT=3000 
       - MONGO_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb-primary,mongodb-secondary/${MONGODB_DATABASE}?authSource=admin
       - MONGO_OPLOG_URL=mongodb://root:${MONGODB_ROOT_PASSWORD}@mongodb-primary:27017/local?authSource=admin
-      - STEEDOS_UNPKG_URL=https://npm.elemecdn.com  # CDN in china, default is https://unpkg.com
-      - STEEDOS_PUBLIC_PAGE_ASSETURLS=https://unpkg.com/@steedos-ui/builder-widgets@2.2.32/dist/assets.json
       - STEEDOS_TENANT_ENABLE_ACTIVATION=true
       - STEEDOS_TENANT_ENABLE_PASSWORD_LOGIN=true
       - STEEDOS_CFS_STORE=S3
