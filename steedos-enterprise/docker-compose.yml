@@ -5,11 +5,11 @@ services:
   # Steedos Platform  
   steedos:
     image: steedos/steedos-enterprise:2.5
-    command: "yarn start"
     ports:
       - "${STEEDOS_PORT:-3000}:3000"
     volumes:
       - "steedos-packages:/app/.steedos"
+      - "steedos-storage:/steedos-storage"
     environment:
       - ROOT_URL=${STEEDOS_ROOT_URL:-http://localhost:3000} 
       - MONGO_URL=mongodb://root:${MONGODB_PASSWORD:-steedos}@${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/${MONGODB_DATABASE:-steedos}?authSource=admin
@@ -21,8 +21,8 @@ services:
       - STEEDOS_CFS_AWS_S3_BUCKET=${MINIO_DEFAULT_BUCKETS:-steedos}
       - STEEDOS_CFS_AWS_S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-steedos} 
       - STEEDOS_CFS_AWS_S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-steedos123}
-      - TRANSPORTER=nats://${NATS_USERNAME:-steedos}:${NATS_USERNAME:-steedos}@nats:4222
-      - CACHER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379
+      - TRANSPORTER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379
+      - CACHER=redis://:${REDIS_PASSWORD:-steedos}@redis:6379/1
       - STEEDOS_IDENTITY_OIDC_ENABLED=true
       - STEEDOS_IDENTITY_OIDC_CONFIG_URL=https://id.steedos.cn/realms/master/.well-known/openid-configuration
       - STEEDOS_IDENTITY_OIDC_CLIENT_ID=steedos-oidc-public
@@ -41,8 +41,6 @@ services:
         condition: service_healthy
       minio:
         condition: service_started
-      nats:
-        condition: service_started
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     
@@ -55,17 +53,6 @@ services:
     ports:
       - "6379:6379"
  
-  # Micro Service Transporter
-  nats:
-    image: steedos/nats:2.8.5
-    environment:
-      - MAX_PAYLOAD=8096000 #8MB
-      - NATS_USERNAME=${NATS_USERNAME:-steedos}
-      - NATS_PASSWORD=${NATS_PASSWORD:-steedos}
-    ports:
-      - "4222:4222"
-      - "8222:8222" # monitor port
-
   # S3 Storage Service
   minio:
     image: bitnami/minio
@@ -144,6 +131,8 @@ services:
 
 volumes:
   steedos-packages:
+    driver: local
+  steedos-storage:
     driver: local
   steedos-minio-data:
     driver: local

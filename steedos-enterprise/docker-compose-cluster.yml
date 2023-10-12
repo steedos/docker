@@ -5,7 +5,6 @@ services:
   # Steedos Platform  
   steedos:
     image: steedos/steedos-enterprise:2.5
-    command: "yarn start"
     ports:
       - "${STEEDOS_PORT}:3000"
     volumes:

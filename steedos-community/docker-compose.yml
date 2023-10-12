@@ -11,12 +11,13 @@ services:
       - PORT=3000
       - MONGO_URL=mongodb://mongodb:27017/steedos
       - MONGO_OPLOG_URL=mongodb://mongodb:27017/local
-      - TRANSPORTER=nats://nats:4222
-      - CACHER=redis://redis:6379
-      - STEEDOS_INITIAL_PACKAGES=@steedos-labs/project-ee,@steedos-labs/demo-ee,@steedos-labs/flows
+      - TRANSPORTER=redis://redis:6379
+      - CACHER=redis://redis:6379/1
+      - STEEDOS_INITIAL_PACKAGES=@steedos-labs/contract-ce
+      - STEEDOS_STORAGE_DIR=/steedos-storage
     volumes:
       - "steedos-installed-packages:/app/.steedos"
-      - "steedos-data:/app/storage"
+      - "steedos-data:/steedos-storage"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
@@ -58,13 +59,6 @@ services:
         condition: service_healthy
     command: >
       mongo --host mongodb:27017 --eval "rs.initiate({ _id: 'steedos', members: [{_id: 0, host: 'mongodb:27017'}]})"
-
-  # Micro Service Transporter
-  nats:
-    image: nats:2.9
-    ports:
-      - "4222:4222"
-      # - "8222:8222" # monitor port
 
 
   # watchtower:
